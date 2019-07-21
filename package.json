@@ -1,0 +1,29 @@
+{
+  "name": "noobfitness-web",
+  "version": "1.0.0",
+  "description": "Swoledom for the masses",
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "test": "react-scripts-ts test --env=jsdom"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ygdanchoi/noobfitness-web.git"
+  },
+  "author": "Dan Choi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ygdanchoi/noobfitness-web/issues"
+  },
+  "homepage": "https://github.com/ygdanchoi/noobfitness-web#readme",
+  "dependencies": {
+    "@types/react": "^16.8.23",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-router-dom": "^4.3.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-google-login": "^5.0.4",
+    "react-router-dom": "^5.0.1"
+  }
+}
