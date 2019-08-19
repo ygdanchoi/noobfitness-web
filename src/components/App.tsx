@@ -1,21 +1,34 @@
 import * as React from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { connect } from 'react-redux';
+import { receiveCurrentUser } from '../actions/users.actions'
 import keys from '../config/keys';
 import '../index.css';
+import { AppState } from '../store/store'
+import { thunkReceiveCurrentUser } from '../thunks/users.thunks';
+import { IUsersState } from '../types/users.types'
+
+const mapStateToProps = (state: AppState) => ({
+  users: state.users,
+})
+
+interface IAppProps {
+  receiveCurrentUser: typeof receiveCurrentUser,
+  thunkReceiveCurrentUser: any,
+  users: IUsersState
+}
 
 interface IAppState {
-  isAuthenticated: boolean,
   token: string,
-  user: any
+  misc: any
 };
 
-class App extends React.Component<any, IAppState> {
-  constructor(props: any) {
+class App extends React.Component<IAppProps, IAppState> {
+  constructor(props: IAppProps) {
     super(props);
     this.state = {
-      isAuthenticated: false,
-      token: '',
-      user: null
+      misc: null,
+      token: ''
     };
     this.handleGoogleLogin = this.handleGoogleLogin.bind(this);
     this.handleLogoutSuccess = this.handleLogoutSuccess.bind(this);
@@ -25,7 +38,7 @@ class App extends React.Component<any, IAppState> {
   public render() {
     let googleButton: JSX.Element;
     let getCurrentUserButton: JSX.Element | null;
-    if (this.state.isAuthenticated) {
+    if (this.props.users.currentUser) {
       googleButton = <GoogleLogout 
         clientId={ keys.google.clientID }
         onLogoutSuccess={ this.handleLogoutSuccess } />
@@ -43,7 +56,7 @@ class App extends React.Component<any, IAppState> {
     return (
       <div className="App">
         <p>Token: { this.state.token }</p>
-        <p>user: { JSON.stringify(this.state.user) }</p>
+        <p>user: { JSON.stringify(this.props.users.currentUser) }</p>
         { googleButton }
         { getCurrentUserButton }
       </div>
@@ -67,13 +80,14 @@ class App extends React.Component<any, IAppState> {
       return res.json();
     }).then(user => {
       if (token) {
-        this.setState({ isAuthenticated: true, token, user });
+        this.props.thunkReceiveCurrentUser(user)
+        // this.setState({ isAuthenticated: true, token });
       }
     });
   }
 
   private handleLogoutSuccess() {
-    this.setState({ isAuthenticated: false, token: '', user: null });
+    this.setState({ token: '' });
   }
 
   private getCurrentUser() {
@@ -83,10 +97,13 @@ class App extends React.Component<any, IAppState> {
       method: 'GET',
       mode: 'cors'
     };
-    fetch(`http://localhost:5000/api/users/${this.state.user._id}`, options)
+    fetch(`http://localhost:5000/api/users/${this.props.users.currentUser._id}`, options)
       .then(res => res.json())
-      .then(res => this.setState({ user: res }));
+      .then(res => this.setState({ misc: res }));
   }
 }
 
-export default App;
+export default connect(
+  mapStateToProps,
+  { receiveCurrentUser, thunkReceiveCurrentUser }
+)(App);
