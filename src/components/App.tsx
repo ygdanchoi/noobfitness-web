@@ -14,12 +14,11 @@ const mapStateToProps = (state: AppState) => ({
 
 interface IAppProps {
   receiveCurrentUser: typeof receiveCurrentUser,
-  thunkReceiveCurrentUser: any,
+  thunkReceiveCurrentUser: typeof thunkReceiveCurrentUser,
   users: IUsersState
 }
 
 interface IAppState {
-  token: string,
   misc: any
 };
 
@@ -28,7 +27,6 @@ class App extends React.Component<IAppProps, IAppState> {
     super(props);
     this.state = {
       misc: null,
-      token: ''
     };
     this.handleGoogleLogin = this.handleGoogleLogin.bind(this);
     this.handleLogoutSuccess = this.handleLogoutSuccess.bind(this);
@@ -55,7 +53,6 @@ class App extends React.Component<IAppProps, IAppState> {
 
     return (
       <div className="App">
-        <p>Token: { this.state.token }</p>
         <p>user: { JSON.stringify(this.props.users.currentUser) }</p>
         { googleButton }
         { getCurrentUserButton }
@@ -74,26 +71,28 @@ class App extends React.Component<IAppProps, IAppState> {
       method: 'POST',
       mode: 'cors'
     };
-    let token: string | null;
+    let authToken: string | null;
     fetch('http://localhost:5000/api/auth/google', options).then(res => {
-      token = res.headers.get('x-auth-token');
+      authToken = res.headers.get('x-auth-token');
       return res.json();
     }).then(user => {
-      if (token) {
-        this.props.thunkReceiveCurrentUser(user)
-        // this.setState({ isAuthenticated: true, token });
+      if (authToken) {
+        this.props.thunkReceiveCurrentUser(user, authToken)
       }
     });
   }
 
   private handleLogoutSuccess() {
-    this.setState({ token: '' });
+    this.setState({ misc: '' });
   }
 
   private getCurrentUser() {
+    if (!this.props.users.currentUser) {
+      return;
+    }
     const options: RequestInit = {
       cache: 'default',
-      headers: new Headers({ 'x-auth-token': this.state.token }),
+      headers: new Headers({ 'x-auth-token': this.props.users.currentUser.authToken }),
       method: 'GET',
       mode: 'cors'
     };
