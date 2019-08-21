@@ -1,21 +1,20 @@
 import * as React from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { connect } from 'react-redux';
-import { receiveCurrentUser } from '../actions/users.actions'
 import keys from '../config/keys';
 import '../index.css';
 import { AppState } from '../store/store'
-import { thunkReceiveCurrentUser } from '../thunks/users.thunks';
-import { IUsersState } from '../types/users.types'
+import { thunkLogin, thunkLogout } from '../thunks/auth.thunks';
+import { IAuthState } from '../types/auth.types'
 
 const mapStateToProps = (state: AppState) => ({
-  users: state.users,
+  auth: state.auth,
 })
 
 interface IAppProps {
-  receiveCurrentUser: typeof receiveCurrentUser,
-  thunkReceiveCurrentUser: typeof thunkReceiveCurrentUser,
-  users: IUsersState
+  thunkLogin: typeof thunkLogin,
+  thunkLogout: typeof thunkLogout,
+  auth: IAuthState
 }
 
 interface IAppState {
@@ -36,7 +35,7 @@ class App extends React.Component<IAppProps, IAppState> {
   public render() {
     let googleButton: JSX.Element;
     let getCurrentUserButton: JSX.Element | null;
-    if (this.props.users.currentUser) {
+    if (this.props.auth.user) {
       googleButton = <GoogleLogout 
         clientId={ keys.google.clientID }
         onLogoutSuccess={ this.handleLogoutSuccess } />
@@ -53,7 +52,7 @@ class App extends React.Component<IAppProps, IAppState> {
 
     return (
       <div className="App">
-        <p>user: { JSON.stringify(this.props.users.currentUser) }</p>
+        <p>user: { JSON.stringify(this.props.auth.user) }</p>
         { googleButton }
         { getCurrentUserButton }
       </div>
@@ -77,26 +76,26 @@ class App extends React.Component<IAppProps, IAppState> {
       return res.json();
     }).then(user => {
       if (authToken) {
-        this.props.thunkReceiveCurrentUser(user, authToken)
+        this.props.thunkLogin(user, authToken)
       }
     });
   }
 
   private handleLogoutSuccess() {
-    this.setState({ misc: '' });
+    this.props.thunkLogout();
   }
 
   private getCurrentUser() {
-    if (!this.props.users.currentUser) {
+    if (!this.props.auth.user) {
       return;
     }
     const options: RequestInit = {
       cache: 'default',
-      headers: new Headers({ 'x-auth-token': this.props.users.currentUser.authToken }),
+      headers: new Headers({ 'x-auth-token': this.props.auth.user.authToken }),
       method: 'GET',
       mode: 'cors'
     };
-    fetch(`http://localhost:5000/api/users/${this.props.users.currentUser._id}`, options)
+    fetch(`http://localhost:5000/api/users/${this.props.auth.user._id}`, options)
       .then(res => res.json())
       .then(res => this.setState({ misc: res }));
   }
@@ -104,5 +103,5 @@ class App extends React.Component<IAppProps, IAppState> {
 
 export default connect(
   mapStateToProps,
-  { receiveCurrentUser, thunkReceiveCurrentUser }
+  { thunkLogin, thunkLogout }
 )(App);

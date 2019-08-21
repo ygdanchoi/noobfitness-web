@@ -1,16 +1,24 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { receiveCurrentUser } from '../actions/users.actions';
+import { login, logout } from '../actions/auth.actions';
 import { AppState } from '../store/store';
-import { IUser } from '../types/users.types'
+import { IUser } from '../types/auth.types'
 
-export const thunkReceiveCurrentUser = (
+export const thunkLogin = (
   user: IUser,
   authToken: string,
 ): ThunkAction<void, AppState, null, Action<IUser>> => async dispatch => {
   // const asyncResp = await exampleAPI();
   dispatch(
-    receiveCurrentUser(user, authToken)
+    login(user, authToken)
+  );
+};
+
+export const thunkLogout = (
+): ThunkAction<void, AppState, null, Action<IUser>> => async dispatch => {
+  // const asyncResp = await exampleAPI();
+  dispatch(
+    logout()
   );
 };
 

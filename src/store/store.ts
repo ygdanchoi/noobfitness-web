@@ -1,10 +1,10 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
-import UsersReducer from '../reducers/users.reducer';
+import AuthReducer from '../reducers/auth.reducer';
 
 const rootReducer = combineReducers({
-  users: UsersReducer
+  auth: AuthReducer
 });
 
 const configureStore = () => (
