@@ -11,7 +11,7 @@ const AuthReducer: Reducer<IAuthState, AuthAction> = (
 ): IAuthState => {
   switch (action.type) {
     case LOGIN:
-      return {user: action.user};
+      return { user: action.user };
     case LOGOUT:
       return LOGGED_OUT;
     default:

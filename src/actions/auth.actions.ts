@@ -1,9 +1,9 @@
 import { ILoginAction, ILogoutAction, IUser, LOGIN, LOGOUT } from '../types/auth.types';
 
-export function login(user: IUser, authToken: string): any {
+export function login(user: IUser): any {
   const action: ILoginAction = {
     type: LOGIN,
-    user: {...user, authToken}
+    user
   };
   return action;
 }

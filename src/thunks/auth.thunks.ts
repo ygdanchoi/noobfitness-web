@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { login, logout } from '../actions/auth.actions';
@@ -5,23 +6,25 @@ import { AppState } from '../store/store';
 import { IUser } from '../types/auth.types'
 
 export const thunkLogin = (
-  user: IUser,
-  authToken: string,
+  accessToken: string
 ): ThunkAction<void, AppState, null, Action<IUser>> => async dispatch => {
-  // const asyncResp = await exampleAPI();
+  const response = await axios({
+    data: { access_token: accessToken },
+    method: 'POST',
+    url: 'http://localhost:5000/api/auth/google'
+  })
+  
+  const authToken = response.headers['x-auth-token'];
+  const user: IUser = { ...response.data, authToken };
+
   dispatch(
-    login(user, authToken)
+    login(user)
   );
 };
 
 export const thunkLogout = (
 ): ThunkAction<void, AppState, null, Action<IUser>> => async dispatch => {
-  // const asyncResp = await exampleAPI();
   dispatch(
     logout()
   );
 };
-
-// function exampleAPI() {
-//   return Promise.resolve('Async Chat Bot');
-// }
