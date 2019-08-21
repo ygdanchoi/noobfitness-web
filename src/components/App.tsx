@@ -54,7 +54,7 @@ class App extends React.Component<IAppProps, IAppState> {
     return (
       <div className="App">
         <p>user: { JSON.stringify(this.props.auth.user) }</p>
-        <p>exercises: </p>
+        <p>exercises ({ this.state.exercises.length }): </p>
         <ul>
           { this.state.exercises.map((exercise, i) => <li key={ i }>{ JSON.stringify(exercise) }</li>) }
         </ul>
