@@ -1,12 +1,13 @@
 import axios from 'axios';
 import * as React from 'react';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { GoogleLogin } from 'react-google-login';
 import { connect } from 'react-redux';
 import keys from '../config/keys';
 import '../index.css';
 import { AppState } from '../store/store'
 import { thunkLoginUser, thunkLogoutUser, thunkRestoreUser } from '../thunks/auth.thunks';
 import { IAuthState } from '../types/auth.types'
+import NavBar from './nav-bar/NavBar';
 
 const mapStateToProps = (state: AppState) => ({
   auth: state.auth,
@@ -31,7 +32,6 @@ class App extends React.Component<IAppProps, IAppState> {
     };
 
     this.handleGoogleLogin = this.handleGoogleLogin.bind(this);
-    this.handleLogoutSuccess = this.handleLogoutSuccess.bind(this);
     this.getExercises = this.getExercises.bind(this);
   }
 
@@ -45,25 +45,21 @@ class App extends React.Component<IAppProps, IAppState> {
   }
 
   public render() {
-    let googleButton: JSX.Element;
-    let getExercisesButton: JSX.Element | null;
-    if (this.props.auth.user) {
-      googleButton = <GoogleLogout 
-        clientId={ keys.google.clientID }
-        onLogoutSuccess={ this.handleLogoutSuccess } />
-        getExercisesButton = <button onClick={ this.getExercises }>
-          get exercises
-        </button>
-    } else {
+    let googleButton: JSX.Element | null = null;
+    let getExercisesButton: JSX.Element | null = null;
+    if (!this.props.auth.user) {
       googleButton = <GoogleLogin
         clientId={ keys.google.clientID }
         onSuccess={ this.handleGoogleLogin }
-        onFailure={ this.handleGoogleLogin } />
-        getExercisesButton = null;
+        onFailure={ this.props.thunkLogoutUser } />
+      getExercisesButton = null;
     }
 
     return (
       <div className="App">
+        <NavBar
+          user={ this.props.auth.user }
+          thunkLogoutUser = { this.props.thunkLogoutUser } />
         <p>user: { JSON.stringify(this.props.auth.user) }</p>
         <p>exercises ({ this.state.exercises.length }): </p>
         <p>auth: { JSON.stringify(this.props.auth) }</p>
@@ -78,11 +74,6 @@ class App extends React.Component<IAppProps, IAppState> {
   
   private handleGoogleLogin(response: any) {
     this.props.thunkLoginUser(response.accessToken)
-  }
-
-  private handleLogoutSuccess() {
-    this.props.thunkLogoutUser();
-    this.setState({ exercises: [] });
   }
 
   private async getExercises() {
