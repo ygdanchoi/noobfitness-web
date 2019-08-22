@@ -34,9 +34,10 @@ class App extends React.Component<IAppProps> {
   }
 
   public render() {
-    const mainOrAuth = (this.props.auth.user)
+    const mainOrAuth = (this.props.auth.authToken && this.props.auth.user)
       ? <Main
-        auth={ this.props.auth } />
+        authToken={ this.props.auth.authToken }
+        user={ this.props.auth.user } />
       : <Auth
         thunkLoginUser={ this.props.thunkLoginUser }
         thunkLogoutUser={ this.props.thunkLogoutUser } />

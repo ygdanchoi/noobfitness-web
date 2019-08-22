@@ -5,7 +5,8 @@ body {
 }
 
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .NavBar {
@@ -13,4 +14,20 @@ body {
   background: gray;
   display: flex;
   justify-content: space-between;
+}
+
+.Auth {
+  display: flex;
+  flex-grow: 1;
+}
+
+.Main {
+  background: burlywood;
+  display: flex;
+}
+
+.MainSideBar {
+  background: gold;
+  display: flex;
+  flex-direction: column;
 }

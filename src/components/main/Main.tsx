@@ -1,9 +1,11 @@
 import axios from 'axios';
 import * as React from 'react';
-import { IAuthState } from 'src/types/auth.types';
+import { IUser } from 'src/types/auth.types';
+import MainSideBar from './MainSideBar';
 
 interface IMainProps {
-  auth: IAuthState;
+  authToken: string;
+  user: IUser;
 }
 
 interface IMainState {
@@ -24,23 +26,22 @@ class Main extends React.Component<IMainProps, IMainState> {
     const getExercisesButton = <button onClick={ this.getExercises }>get exercises</button>
 
     return (
-      <div>
-        <p>exercises ({ this.state.exercises.length }): </p>
-        <ul>
-          { this.state.exercises.map((exercise, i) => <li key={ i }>{ JSON.stringify(exercise) }</li>) }
-        </ul>
-        { getExercisesButton }
+      <div className='Main'>
+        <MainSideBar user={ this.props.user } />
+        <div>
+          <p>exercises ({ this.state.exercises.length }): </p>
+          <ul>
+            { this.state.exercises.map((exercise, i) => <li key={ i }>{ JSON.stringify(exercise) }</li>) }
+          </ul>
+          { getExercisesButton }
+        </div>
       </div>
     );
   }
   
   private async getExercises() {
-    if (!this.props.auth.user) {
-      return;
-    }
-
     const response = await axios({
-      headers: { 'x-auth-token': this.props.auth.authToken },
+      headers: { 'x-auth-token': this.props.authToken },
       method: 'GET',
       url: 'http://localhost:5000/api/exercises'
     })

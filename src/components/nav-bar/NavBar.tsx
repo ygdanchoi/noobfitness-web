@@ -20,7 +20,7 @@ const NavBar: React.SFC<INavBarProps> = props => {
     <div className='NavBar'>
       <span>noob fitness</span>
       <div>
-        <img src={ props.user ? props.user.avatar : 'broken'} alt='Logged Out' width='48em' height='48em' />
+        <img src={ props.user ? props.user.avatar : 'broken'} alt='Avatar' width='48em' height='48em' />
         { logoutButton }
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import logger from 'redux-logger';
+// import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import AuthReducer from '../reducers/auth.reducer';
 
@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
 const configureStore = () => (
   createStore(
     rootReducer,
-    applyMiddleware(thunk, logger)
+    applyMiddleware(thunk, /* logger */)
   )
 );
 
