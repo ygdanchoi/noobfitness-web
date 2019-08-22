@@ -5,9 +5,9 @@ const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
 const USER_ID_KEY = 'USER_ID_KEY';
 
 const INITIAL: IAuthState = {
-  authToken: sessionStorage.getItem(AUTH_TOKEN_KEY),
+  authToken: localStorage.getItem(AUTH_TOKEN_KEY),
   user: null,
-  userId: sessionStorage.getItem(USER_ID_KEY)
+  userId: localStorage.getItem(USER_ID_KEY)
 }
 
 const LOGGED_OUT: IAuthState = {
@@ -22,14 +22,14 @@ const AuthReducer: Reducer<IAuthState, AuthAction> = (
 ): IAuthState => {
   switch (action.type) {
     case LOGIN_USER:
-      sessionStorage.setItem(AUTH_TOKEN_KEY, action.authToken);
-      sessionStorage.setItem(USER_ID_KEY, action.user._id);
+      localStorage.setItem(AUTH_TOKEN_KEY, action.authToken);
+      localStorage.setItem(USER_ID_KEY, action.user._id);
 
       return { authToken: action.authToken, user: action.user, userId: action.user._id };
     case RESTORE_USER:
       return { ...state, user: action.user }
     case LOGOUT_USER:
-      sessionStorage.clear();
+      localStorage.clear();
 
       return LOGGED_OUT;
     default:
