@@ -1,12 +1,11 @@
 import axios from 'axios';
 import * as React from 'react';
-import { GoogleLogin } from 'react-google-login';
 import { connect } from 'react-redux';
-import keys from '../config/keys';
 import '../index.css';
 import { AppState } from '../store/store'
 import { thunkLoginUser, thunkLogoutUser, thunkRestoreUser } from '../thunks/auth.thunks';
 import { IAuthState } from '../types/auth.types'
+import Auth from './auth/Auth';
 import NavBar from './nav-bar/NavBar';
 
 const mapStateToProps = (state: AppState) => ({
@@ -31,7 +30,6 @@ class App extends React.Component<IAppProps, IAppState> {
       exercises: [],
     };
 
-    this.handleGoogleLogin = this.handleGoogleLogin.bind(this);
     this.getExercises = this.getExercises.bind(this);
   }
 
@@ -45,37 +43,30 @@ class App extends React.Component<IAppProps, IAppState> {
   }
 
   public render() {
-    let googleButton: JSX.Element | null = null;
-    let getExercisesButton: JSX.Element | null = null;
-    if (!this.props.auth.user) {
-      googleButton = <GoogleLogin
-        clientId={ keys.google.clientID }
-        onSuccess={ this.handleGoogleLogin }
-        onFailure={ this.props.thunkLogoutUser } />
-      getExercisesButton = null;
-    }
+    const getExercisesButton = <button onClick={ this.getExercises }>get exercises</button>
+
+    const main = (this.props.auth.user)
+      ? <div>
+          <p>exercises ({ this.state.exercises.length }): </p>
+          <ul>
+            { this.state.exercises.map((exercise, i) => <li key={ i }>{ JSON.stringify(exercise) }</li>) }
+          </ul>
+          { getExercisesButton }
+        </div>
+      : <Auth
+        thunkLoginUser = { this.props.thunkLoginUser }
+        thunkLogoutUser = { this.props.thunkLogoutUser } />
 
     return (
       <div className="App">
         <NavBar
           user={ this.props.auth.user }
           thunkLogoutUser = { this.props.thunkLogoutUser } />
-        <p>user: { JSON.stringify(this.props.auth.user) }</p>
-        <p>exercises ({ this.state.exercises.length }): </p>
-        <p>auth: { JSON.stringify(this.props.auth) }</p>
-        <ul>
-          { this.state.exercises.map((exercise, i) => <li key={ i }>{ JSON.stringify(exercise) }</li>) }
-        </ul>
-        { googleButton }
-        { getExercisesButton }
+        { main }
       </div>
     );
   }
   
-  private handleGoogleLogin(response: any) {
-    this.props.thunkLoginUser(response.accessToken)
-  }
-
   private async getExercises() {
     if (!this.props.auth.user) {
       return;

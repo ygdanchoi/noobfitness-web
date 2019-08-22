@@ -5,9 +5,7 @@ import { thunkLogoutUser } from '../../thunks/auth.thunks';
 import { IUser } from '../../types/auth.types';
 
 interface INavBarProps {
-  // thunkLoginUser: typeof thunkLoginUser;
   thunkLogoutUser: typeof thunkLogoutUser;
-  // thunkRestoreUser: typeof thunkRestoreUser;
   user: IUser | null;
 }
 
