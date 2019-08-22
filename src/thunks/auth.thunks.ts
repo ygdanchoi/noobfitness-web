@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { login, logout } from '../actions/auth.actions';
+import { loginUser, logoutUser, restoreUser } from '../actions/auth.actions';
 import { AppState } from '../store/store';
 import { IUser } from '../types/auth.types'
 
-export const thunkLogin = (
+export const thunkLoginUser = (
   accessToken: string
 ): ThunkAction<void, AppState, null, Action<IUser>> => async dispatch => {
   const response = await axios({
@@ -15,16 +15,33 @@ export const thunkLogin = (
   })
   
   const authToken = response.headers['x-auth-token'];
-  const user: IUser = { ...response.data, authToken };
+  const user: IUser = response.data;
 
   dispatch(
-    login(user)
+    loginUser(authToken, user)
   );
 };
 
-export const thunkLogout = (
+export const thunkRestoreUser = (
+  authToken: string,
+  userId: string
+): ThunkAction<void, AppState, null, Action<IUser>> => async dispatch => {
+  const response = await axios({
+    headers: { 'x-auth-token': authToken },
+    method: 'GET',
+    url: `http://localhost:5000/api/users/${userId}`
+  });
+
+  const user: IUser = response.data;
+
+  dispatch(
+    restoreUser(user)
+  );
+};
+
+export const thunkLogoutUser = (
 ): ThunkAction<void, AppState, null, Action<IUser>> => async dispatch => {
   dispatch(
-    logout()
+    logoutUser()
   );
 };

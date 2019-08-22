@@ -1,10 +1,9 @@
 export interface IUser {
-  _id: string,
-  googleId: number,
-  username: string,
-  avatar: string
-  routines: IUserRoutine[],
-  authToken: string
+  _id: string;
+  googleId: number;
+  username: string;
+  avatar: string;
+  routines: IUserRoutine[];
 }
 
 export interface IUserRoutine {
@@ -13,19 +12,28 @@ export interface IUserRoutine {
 }
 
 export interface IAuthState {
-  user: IUser | null
+  authToken: string | null;
+  user: IUser | null;
+  userId: string | null;
 }
 
-export interface ILoginAction {
-  type: typeof LOGIN,
-  user: IUser
+export interface ILoginUserAction {
+  authToken: string;
+  type: typeof LOGIN_USER;
+  user: IUser;
 }
 
-export interface ILogoutAction {
-  type: typeof LOGOUT,
+export interface IRestoreUserAction {
+  type: typeof RESTORE_USER;
+  user: IUser;
 }
 
-export const LOGIN = 'LOGIN';
-export const LOGOUT = 'LOGOUT';
+export interface ILogoutUserAction {
+  type: typeof LOGOUT_USER;
+}
 
-export type AuthAction = ILoginAction | ILogoutAction;
+export const LOGIN_USER = 'LOGIN_USER';
+export const RESTORE_USER = 'RESTORE_USER';
+export const LOGOUT_USER = 'LOGOUT_USER';
+
+export type AuthAction = ILoginUserAction | IRestoreUserAction | ILogoutUserAction;

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import keys from '../config/keys';
 import '../index.css';
 import { AppState } from '../store/store'
-import { thunkLogin, thunkLogout } from '../thunks/auth.thunks';
+import { thunkLoginUser, thunkLogoutUser, thunkRestoreUser } from '../thunks/auth.thunks';
 import { IAuthState } from '../types/auth.types'
 
 const mapStateToProps = (state: AppState) => ({
@@ -13,13 +13,14 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 interface IAppProps {
-  thunkLogin: typeof thunkLogin,
-  thunkLogout: typeof thunkLogout,
-  auth: IAuthState
+  thunkLoginUser: typeof thunkLoginUser;
+  thunkLogoutUser: typeof thunkLogoutUser;
+  thunkRestoreUser: typeof thunkRestoreUser;
+  auth: IAuthState;
 }
 
 interface IAppState {
-  exercises: any[]
+  exercises: any[];
 };
 
 class App extends React.Component<IAppProps, IAppState> {
@@ -28,9 +29,19 @@ class App extends React.Component<IAppProps, IAppState> {
     this.state = {
       exercises: [],
     };
+
     this.handleGoogleLogin = this.handleGoogleLogin.bind(this);
     this.handleLogoutSuccess = this.handleLogoutSuccess.bind(this);
     this.getExercises = this.getExercises.bind(this);
+  }
+
+  public componentDidMount() {
+    if (this.props.auth.authToken && this.props.auth.userId && !this.props.auth.user) {
+      this.props.thunkRestoreUser(
+        this.props.auth.authToken,
+        this.props.auth.userId
+      )
+    }
   }
 
   public render() {
@@ -55,6 +66,7 @@ class App extends React.Component<IAppProps, IAppState> {
       <div className="App">
         <p>user: { JSON.stringify(this.props.auth.user) }</p>
         <p>exercises ({ this.state.exercises.length }): </p>
+        <p>auth: { JSON.stringify(this.props.auth) }</p>
         <ul>
           { this.state.exercises.map((exercise, i) => <li key={ i }>{ JSON.stringify(exercise) }</li>) }
         </ul>
@@ -65,11 +77,11 @@ class App extends React.Component<IAppProps, IAppState> {
   }
   
   private handleGoogleLogin(response: any) {
-    this.props.thunkLogin(response.accessToken)
+    this.props.thunkLoginUser(response.accessToken)
   }
 
   private handleLogoutSuccess() {
-    this.props.thunkLogout();
+    this.props.thunkLogoutUser();
     this.setState({ exercises: [] });
   }
 
@@ -79,7 +91,7 @@ class App extends React.Component<IAppProps, IAppState> {
     }
 
     const response = await axios({
-      headers: { 'x-auth-token': this.props.auth.user.authToken },
+      headers: { 'x-auth-token': this.props.auth.authToken },
       method: 'GET',
       url: 'http://localhost:5000/api/exercises'
     })
@@ -90,5 +102,5 @@ class App extends React.Component<IAppProps, IAppState> {
 
 export default connect(
   mapStateToProps,
-  { thunkLogin, thunkLogout }
+  { thunkLoginUser, thunkLogoutUser, thunkRestoreUser }
 )(App);
