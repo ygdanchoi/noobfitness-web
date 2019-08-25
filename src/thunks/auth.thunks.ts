@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { loginUser, logoutUser, restoreUser } from '../actions/auth.actions';
+import { loginUser, restoreUser } from '../actions/auth.actions';
 import { AppState } from '../store/store';
 import { IUser } from '../types/auth.types'
 
@@ -36,12 +36,5 @@ export const thunkRestoreUser = (
 
   dispatch(
     restoreUser(user)
-  );
-};
-
-export const thunkLogoutUser = (
-): ThunkAction<void, AppState, null, Action<IUser>> => async dispatch => {
-  dispatch(
-    logoutUser()
   );
 };
