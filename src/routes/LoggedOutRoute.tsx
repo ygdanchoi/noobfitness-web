@@ -9,19 +9,26 @@ interface ILoggedOutRouteProps extends RouteProps {
   component: React.ComponentType<any>;
 }
 
-const LoggedOutRoute: React.SFC<ILoggedOutRouteProps> = ({
-  component: Component,
-  isAuthenticated
-}) => {
-  if (isAuthenticated) {
-    history.push('/');
+class LoggedOutRoute extends React.Component<ILoggedOutRouteProps> {
+  constructor(props: ILoggedOutRouteProps) {
+    super(props);
   }
 
-  const render: ((props: RouteComponentProps<any>) => React.ReactNode) = otherProps => <Component {...otherProps} />;
+  public componentDidUpdate() {
+    if (this.props.isAuthenticated) {
+      history.push('/');
+    }
+  }
 
-  return (
-    <Route render={ render } />
-  );
+  public render() {
+    const renderComponent: ((props: RouteComponentProps<any>) => React.ReactNode) = otherProps => {
+      return <this.props.component {...otherProps} />
+    };
+  
+    return (
+      <Route render={ renderComponent } />
+    );
+  }
 };
 
 const mapStateToProps = (state: AppState) => ({
