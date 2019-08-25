@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/auth.actions';
 import keys from '../../config/keys';
 import { AppState } from '../../store/store'
-import { IUser } from '../../types/auth.types';
+import { IAuthState } from '../../types/auth.types';
 
 interface INavBarProps {
   logoutUser: typeof logoutUser;
-  user: IUser | null;
+  auth: IAuthState;
 }
 
 const NavBar: React.SFC<INavBarProps> = props => {
-  const logoutButton = (props.user)
+  const logoutButton = (props.auth.isAuthenticated)
     ? <GoogleLogout 
       clientId={ keys.google.clientID }
       onLogoutSuccess={ props.logoutUser } />
@@ -22,7 +22,7 @@ const NavBar: React.SFC<INavBarProps> = props => {
     <div className='NavBar'>
       <span>noob fitness</span>
       <div>
-        <img src={ props.user ? props.user.avatar : 'broken'} alt='Avatar' width='48em' height='48em' />
+        <img src={ props.auth.user.avatar } alt='Avatar' width='48em' height='48em' />
         { logoutButton }
       </div>
     </div>
@@ -30,7 +30,7 @@ const NavBar: React.SFC<INavBarProps> = props => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  user: state.auth.user
+  auth: state.auth
 });
 
 const mapDispatchToProps = {

@@ -2,12 +2,11 @@ import axios from 'axios';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../../store/store'
-import { IUser } from '../../types/auth.types';
+import { IAuthState } from '../../types/auth.types';
 import MainSideBar from './MainSideBar';
 
 interface IMainProps {
-  authToken: string;
-  user: IUser;
+  auth: IAuthState;
 }
 
 interface IMainState {
@@ -29,7 +28,7 @@ class Main extends React.Component<IMainProps, IMainState> {
 
     return (
       <div className='Main'>
-        <MainSideBar user={ this.props.user } />
+        <MainSideBar user={ this.props.auth.user } />
         <div>
           <p>exercises ({ this.state.exercises.length }): </p>
           <ul>
@@ -43,7 +42,7 @@ class Main extends React.Component<IMainProps, IMainState> {
   
   private async getExercises() {
     const response = await axios({
-      headers: { 'x-auth-token': this.props.authToken },
+      headers: { 'x-auth-token': this.props.auth.authToken },
       method: 'GET',
       url: 'http://localhost:5000/api/exercises'
     })
@@ -53,8 +52,7 @@ class Main extends React.Component<IMainProps, IMainState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  authToken: state.auth.authToken,
-  user: state.auth.user
+  auth: state.auth
 });
 
 const mapDispatchToProps = {

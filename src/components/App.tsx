@@ -5,7 +5,7 @@ import { Route, Router } from 'react-router-dom';
 import '../index.css';
 import { AppState } from '../store/store'
 import { thunkRestoreUser } from '../thunks/auth.thunks';
-import { IAuthState } from '../types/auth.types'
+import { IAuthState, NO_USER } from '../types/auth.types'
 import NavBar from './nav-bar/NavBar';
 import Pages from './Pages';
 
@@ -22,7 +22,7 @@ class App extends React.Component<IAppProps> {
   }
 
   public componentDidMount() {
-    if (this.props.auth.authToken && this.props.auth.userId && !this.props.auth.user) {
+    if (this.props.auth.isAuthenticated && this.props.auth.user === NO_USER) {
       this.props.thunkRestoreUser(
         this.props.auth.authToken,
         this.props.auth.userId
@@ -32,10 +32,12 @@ class App extends React.Component<IAppProps> {
 
   public render() {
     return (
-      <Router history={ history }>
-        <NavBar />
-        <Route component={ Pages } />
-      </Router>
+      <div className='App'>
+        <Router history={ history }>
+          <NavBar />
+          <Route component={ Pages } />
+        </Router>
+      </div>
     );
   }
 }

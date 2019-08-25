@@ -5,8 +5,8 @@ import { history } from '../components/App';
 import { AppState } from '../store/store';
 
 interface ILoggedOutRouteProps extends RouteProps {
-  isAuthenticated: boolean;
   component: React.ComponentType<any>;
+  isAuthenticated: boolean;
 }
 
 class LoggedOutRoute extends React.Component<ILoggedOutRouteProps> {
@@ -14,10 +14,12 @@ class LoggedOutRoute extends React.Component<ILoggedOutRouteProps> {
     super(props);
   }
 
+  public componentDidMount() {
+    this.redirect();
+  }
+
   public componentDidUpdate() {
-    if (this.props.isAuthenticated) {
-      history.push('/');
-    }
+    this.redirect();
   }
 
   public render() {
@@ -29,10 +31,16 @@ class LoggedOutRoute extends React.Component<ILoggedOutRouteProps> {
       <Route render={ renderComponent } />
     );
   }
+
+  private redirect() {
+    if (this.props.isAuthenticated) {
+      history.push('/');
+    }
+  }
 };
 
 const mapStateToProps = (state: AppState) => ({
-  isAuthenticated: state.auth.authToken !== null && state.auth.userId !== null
+  isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(

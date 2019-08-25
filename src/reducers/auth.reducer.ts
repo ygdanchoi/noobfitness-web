@@ -1,16 +1,25 @@
 import { Reducer } from 'redux';
 import {
   AuthAction, IAuthState, ILoginUserAction,
-  LOGIN_USER, LOGOUT_USER, RESTORE_USER
+  LOGIN_USER, LOGOUT_USER, NO_USER, RESTORE_USER, 
 } from '../types/auth.types';
 
 const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
 const USER_ID_KEY = 'USER_ID_KEY';
 
+function getNonNullLocalStorageItem(key: string) {
+  const item = localStorage.getItem(key);
+
+  return (item !== null)
+    ? item
+    : '';
+}
+
 const INITIAL: IAuthState = {
-  authToken: localStorage.getItem(AUTH_TOKEN_KEY),
-  user: null,
-  userId: localStorage.getItem(USER_ID_KEY)
+  authToken: getNonNullLocalStorageItem(AUTH_TOKEN_KEY),
+  isAuthenticated: getNonNullLocalStorageItem(AUTH_TOKEN_KEY).length > 0,
+  user: NO_USER,
+  userId: getNonNullLocalStorageItem(USER_ID_KEY)
 }
 
 const AuthReducer: Reducer<IAuthState, AuthAction> = (
@@ -20,12 +29,26 @@ const AuthReducer: Reducer<IAuthState, AuthAction> = (
   switch (action.type) {
     case LOGIN_USER:
       loginUserSideEffects(action);
-      return { authToken: action.authToken, user: action.user, userId: action.user._id };
+      return {
+        authToken: action.authToken,
+        isAuthenticated: true,
+        user: action.user,
+        userId: action.user._id
+      };
     case RESTORE_USER:
-      return { ...state, user: action.user }
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.user
+      }
     case LOGOUT_USER:
       logoutUserSideEffects();
-      return { authToken: null, user: null, userId: null};
+      return {
+        authToken: '',
+        isAuthenticated: false,
+        user: NO_USER,
+        userId: ''
+      };
     default:
       return state;
   }
