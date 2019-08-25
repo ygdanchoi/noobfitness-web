@@ -21,8 +21,8 @@ class LoggedInRoute extends React.Component<ILoggedInRouteProps> {
   }
 
   public render() {
-    const renderComponent: ((props: RouteComponentProps<any>) => React.ReactNode) = otherProps => {
-      return <this.props.component {...otherProps} />
+    const renderComponent: ((props: RouteComponentProps<any>) => React.ReactNode) = props => {
+      return <this.props.component {...props} />
     };
   
     return (

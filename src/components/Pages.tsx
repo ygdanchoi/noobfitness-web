@@ -9,7 +9,7 @@ const Pages = () => {
   return (
     <Switch>
       <LoggedInRoute path='/' exact={ true } component={ Main } />
-      <LoggedOutRoute path='/auth' exact={true} component={ Auth } />
+      <LoggedOutRoute path='/auth' exact={ true } component={ Auth } />
     </Switch>
   );
 };

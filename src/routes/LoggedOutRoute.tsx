@@ -21,8 +21,8 @@ class LoggedOutRoute extends React.Component<ILoggedOutRouteProps> {
   }
 
   public render() {
-    const renderComponent: ((props: RouteComponentProps<any>) => React.ReactNode) = otherProps => {
-      return <this.props.component {...otherProps} />
+    const renderComponent: ((props: RouteComponentProps<any>) => React.ReactNode) = props => {
+      return <this.props.component {...props} />
     };
   
     return (
