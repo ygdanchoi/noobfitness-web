@@ -1,6 +1,8 @@
 import axios from 'axios';
 import * as React from 'react';
-import { IUser } from 'src/types/auth.types';
+import { connect } from 'react-redux';
+import { AppState } from '../../store/store'
+import { IUser } from '../../types/auth.types';
 import MainSideBar from './MainSideBar';
 
 interface IMainProps {
@@ -50,4 +52,15 @@ class Main extends React.Component<IMainProps, IMainState> {
   }
 }
 
-export default Main;
+const mapStateToProps = (state: AppState) => ({
+  authToken: state.auth.authToken,
+  user: state.auth.user
+});
+
+const mapDispatchToProps = {
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Main);

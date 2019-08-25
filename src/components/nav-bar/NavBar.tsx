@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { GoogleLogout } from 'react-google-login';
+import { connect } from 'react-redux';
+import { logoutUser } from '../../actions/auth.actions';
 import keys from '../../config/keys';
-import { thunkLogoutUser } from '../../thunks/auth.thunks';
+import { AppState } from '../../store/store'
 import { IUser } from '../../types/auth.types';
 
 interface INavBarProps {
-  thunkLogoutUser: typeof thunkLogoutUser;
+  logoutUser: typeof logoutUser;
   user: IUser | null;
 }
 
@@ -13,7 +15,7 @@ const NavBar: React.SFC<INavBarProps> = props => {
   const logoutButton = (props.user)
     ? <GoogleLogout 
       clientId={ keys.google.clientID }
-      onLogoutSuccess={ props.thunkLogoutUser } />
+      onLogoutSuccess={ props.logoutUser } />
     : null;
 
   return (
@@ -27,4 +29,15 @@ const NavBar: React.SFC<INavBarProps> = props => {
   );
 };
 
-export default NavBar;
+const mapStateToProps = (state: AppState) => ({
+  user: state.auth.user
+});
+
+const mapDispatchToProps = {
+  logoutUser
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NavBar);

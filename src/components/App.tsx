@@ -1,20 +1,15 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+// import { BrowserRouter, Route } from 'react-router-dom';
 import '../index.css';
 import { AppState } from '../store/store'
-import { thunkLoginUser, thunkLogoutUser, thunkRestoreUser } from '../thunks/auth.thunks';
+import { thunkRestoreUser } from '../thunks/auth.thunks';
 import { IAuthState } from '../types/auth.types'
 import Auth from './auth/Auth';
 import Main from './main/Main';
 import NavBar from './nav-bar/NavBar';
 
-const mapStateToProps = (state: AppState) => ({
-  auth: state.auth,
-})
-
 interface IAppProps {
-  thunkLoginUser: typeof thunkLoginUser;
-  thunkLogoutUser: typeof thunkLogoutUser;
   thunkRestoreUser: typeof thunkRestoreUser;
   auth: IAuthState;
 }
@@ -35,26 +30,27 @@ class App extends React.Component<IAppProps> {
 
   public render() {
     const mainOrAuth = (this.props.auth.authToken && this.props.auth.user)
-      ? <Main
-        authToken={ this.props.auth.authToken }
-        user={ this.props.auth.user } />
-      : <Auth
-        thunkLoginUser={ this.props.thunkLoginUser }
-        thunkLogoutUser={ this.props.thunkLogoutUser } />
+      ? <Main />
+      : <Auth />
 
     return (
       <div className="App">
-        <NavBar
-          user={ this.props.auth.user }
-          thunkLogoutUser={ this.props.thunkLogoutUser } />
+        <NavBar />
         { mainOrAuth }
       </div>
     );
   }
-
 }
+
+const mapStateToProps = (state: AppState) => ({
+  auth: state.auth
+});
+
+const mapDispatchToProps = {
+  thunkRestoreUser
+};
 
 export default connect(
   mapStateToProps,
-  { thunkLoginUser, thunkLogoutUser, thunkRestoreUser }
+  mapDispatchToProps
 )(App);
