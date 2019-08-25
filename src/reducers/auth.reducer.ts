@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import {
-  AuthAction, IAuthState, ILoginUserAction, ILogoutUserAction,
+  AuthAction, IAuthState, ILoginUserAction,
   LOGIN_USER, LOGOUT_USER, RESTORE_USER
 } from '../types/auth.types';
 
@@ -24,7 +24,7 @@ const AuthReducer: Reducer<IAuthState, AuthAction> = (
     case RESTORE_USER:
       return { ...state, user: action.user }
     case LOGOUT_USER:
-      logoutUserSideEffects(action);
+      logoutUserSideEffects();
       return { authToken: null, user: null, userId: null};
     default:
       return state;
@@ -36,7 +36,7 @@ function loginUserSideEffects(action: ILoginUserAction) {
   localStorage.setItem(USER_ID_KEY, action.user._id);
 }
 
-function logoutUserSideEffects(action: ILogoutUserAction) {
+function logoutUserSideEffects() {
   localStorage.clear();
 }
 
