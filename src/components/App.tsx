@@ -14,6 +14,8 @@ interface IAppProps {
   auth: IAuthState;
 }
 
+export const history = createBrowserHistory();
+
 class App extends React.Component<IAppProps> {
   constructor(props: IAppProps) {
     super(props);
@@ -30,7 +32,7 @@ class App extends React.Component<IAppProps> {
 
   public render() {
     return (
-      <Router history={ createBrowserHistory() }>
+      <Router history={ history }>
         <NavBar />
         <Route component={ Pages } />
       </Router>
