@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GoogleLogout } from 'react-google-login';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { logoutUser } from '../../actions/auth.actions';
 import keys from '../../config/keys';
 import { AppState } from '../../store/store'
@@ -20,7 +21,7 @@ const NavBar: React.SFC<INavBarProps> = props => {
 
   return (
     <div className='NavBar'>
-      <span>noob fitness</span>
+      <Link to={ '/' }><span>noob fitness</span></Link>
       <div>
         <img src={ props.auth.user.avatar } alt='Avatar' width='48em' height='48em' />
         { logoutButton }

@@ -22,12 +22,12 @@ body {
   flex-direction: column;
 }
 
-.Routines {
+.Home {
   background: burlywood;
   display: flex;
 }
 
-.RoutinesSideBar {
+.HomeSideBar {
   background: gold;
   display: flex;
   flex-direction: column;
