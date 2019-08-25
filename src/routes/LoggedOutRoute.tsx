@@ -9,10 +9,10 @@ interface ILoggedOutRouteProps extends RouteProps {
   component: React.ComponentType<any>;
 }
 
-const LoggedOutRoute = ({
+const LoggedOutRoute: React.SFC<ILoggedOutRouteProps> = ({
   component: Component,
   isAuthenticated
-}: ILoggedOutRouteProps) => {
+}) => {
   if (isAuthenticated) {
     history.push('/');
   }

@@ -9,10 +9,10 @@ interface ILoggedInRouteProps extends RouteProps {
   component: React.ComponentType<any>;
 }
 
-const LoggedInRoute = ({
+const LoggedInRoute: React.SFC<ILoggedInRouteProps> = ({
   component: Component,
   isAuthenticated
-}: ILoggedInRouteProps) => {
+}) => {
   if (!isAuthenticated) {
     history.push('/auth');
   }
