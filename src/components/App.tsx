@@ -1,13 +1,13 @@
+import { createBrowserHistory } from 'history';
 import * as React from 'react';
 import { connect } from 'react-redux';
-// import { BrowserRouter, Route } from 'react-router-dom';
+import { Route, Router } from 'react-router-dom';
 import '../index.css';
 import { AppState } from '../store/store'
 import { thunkRestoreUser } from '../thunks/auth.thunks';
 import { IAuthState } from '../types/auth.types'
-import Auth from './auth/Auth';
-import Main from './main/Main';
 import NavBar from './nav-bar/NavBar';
+import Pages from './Pages';
 
 interface IAppProps {
   thunkRestoreUser: typeof thunkRestoreUser;
@@ -29,15 +29,11 @@ class App extends React.Component<IAppProps> {
   }
 
   public render() {
-    const mainOrAuth = (this.props.auth.authToken && this.props.auth.user)
-      ? <Main />
-      : <Auth />
-
     return (
-      <div className="App">
+      <Router history={ createBrowserHistory() }>
         <NavBar />
-        { mainOrAuth }
-      </div>
+        <Route component={ Pages } />
+      </Router>
     );
   }
 }
