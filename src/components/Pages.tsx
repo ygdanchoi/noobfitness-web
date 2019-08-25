@@ -3,13 +3,14 @@ import { Switch } from 'react-router-dom';
 import LoggedInRoute from '../routes/LoggedInRoute';
 import LoggedOutRoute from '../routes/LoggedOutRoute';
 import Auth from './auth/Auth';
-import Main from './home/Home';
+import Home from './home/Home';
 
 const Pages = () => {
   return (
     <Switch>
-      <LoggedInRoute path='/' exact={ true } component={ Main } />
+      <LoggedInRoute path='/' exact={ true } component={ Home } />
       <LoggedOutRoute path='/auth' exact={ true } component={ Auth } />
+      <LoggedInRoute component={ Home } />
     </Switch>
   );
 };
