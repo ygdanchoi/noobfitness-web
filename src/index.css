@@ -32,3 +32,15 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.Routine {
+  background: lightcoral;
+}
+
+.Workout {
+  background: lightgreen;
+}
+
+.NotFound {
+  background: red;
+}
