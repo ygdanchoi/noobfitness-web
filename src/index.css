@@ -17,16 +17,17 @@ body {
 }
 
 .Auth {
+  background: lightblue;
   display: flex;
-  flex-grow: 1;
+  flex-direction: column;
 }
 
-.Main {
+.Routines {
   background: burlywood;
   display: flex;
 }
 
-.MainSideBar {
+.RoutinesSideBar {
   background: gold;
   display: flex;
   flex-direction: column;
