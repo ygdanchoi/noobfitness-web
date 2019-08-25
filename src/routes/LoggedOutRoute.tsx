@@ -4,17 +4,17 @@ import { Route, RouteComponentProps, RouteProps } from 'react-router-dom';
 import { history } from '../components/App';
 import { AppState } from '../store/store';
 
-interface ILoggedInRouteProps extends RouteProps {
+interface ILoggedOutRouteProps extends RouteProps {
   isAuthenticated: boolean;
   component: React.ComponentType<any>;
 }
 
-const LoggedInRoute = ({
+const LoggedOutRoute = ({
   component: Component,
   isAuthenticated
-}: ILoggedInRouteProps) => {
-  if (!isAuthenticated) {
-    history.push('/auth');
+}: ILoggedOutRouteProps) => {
+  if (isAuthenticated) {
+    history.push('/');
   }
 
   const render: ((props: RouteComponentProps<any>) => React.ReactNode) = otherProps => <Component {...otherProps} />;
@@ -30,4 +30,4 @@ const mapStateToProps = (state: AppState) => ({
 
 export default connect(
   mapStateToProps
-)(LoggedInRoute);
+)(LoggedOutRoute);
